@@ -132,7 +132,7 @@ function creaNuovoStato() {
 function getLinkFoto(nome, tipo) {
     if (!nome) nome = 'default';
 
-    const nomeMinuscolo = nome.toLowerCase().trim();
+    const nomeOriginale = nome.trim();
 
     // 1. Controllo se è una foto di gruppo
     if (MAPPA_FOTO_GRUPPO[tipo]) {
@@ -140,8 +140,8 @@ function getLinkFoto(nome, tipo) {
     }
 
     // 2. Controllo se l'amico esiste nella mappa
-    if (MAPPA_FOTO_AMICI[nomeMinuscolo]) {
-        const fotoAmico = MAPPA_FOTO_AMICI[nomeMinuscolo];
+    if (MAPPA_FOTO_AMICI[nomeOriginale]) {
+        const fotoAmico = MAPPA_FOTO_AMICI[nomeOriginale];
 
         // 3. Se il tipo è una chiave (es. "foto1", "foto2"), cerco quella specifica
         if (fotoAmico[tipo]) {
