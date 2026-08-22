@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -82,19 +82,76 @@
                 transform: translateX(-100px);
                 opacity: 0;
             }
-
             10% {
                 opacity: 0.3;
             }
-
             90% {
                 opacity: 0.3;
             }
-
             100% {
                 transform: translateX(calc(400px + 100px));
                 opacity: 0;
             }
+        }
+
+        /* OVERLAY PLAY (schermata iniziale) */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 14, 26, 0.75);
+            z-index: 30;
+            border-radius: 20px;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(6px);
+        }
+        #overlay.nascosto {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #overlay h2 {
+            color: #ffd700;
+            font-size: 1.6em;
+            margin-bottom: 8px;
+            text-shadow: 0 0 30px rgba(255,215,0,0.2);
+        }
+        #overlay p {
+            color: #ccd;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+        #overlay .legenda-play {
+            color: #889;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+        }
+        #btnPlay {
+            padding: 14px 50px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 30px rgba(247,151,30,0.3);
+        }
+        #btnPlay:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(247,151,30,0.5);
+        }
+        #btnPlay:active {
+            transform: scale(0.95);
         }
 
         /* PALLONCINI */
@@ -112,29 +169,26 @@
             filter: drop-shadow(0 4px 15px rgba(0,0,0,0.2));
             touch-action: none;
             transition: transform 0.1s;
-            /* PARTE DAL BASSO */
             bottom: -80px;
             animation: saliSu linear forwards;
+            display: none; /* Nascondi finché non parte il gioco */
         }
 
-            .palloncino:active {
-                transform: scale(0.85);
-            }
+        .palloncino.visibile {
+            display: flex;
+        }
+
+        .palloncino:active {
+            transform: scale(0.85);
+        }
 
         @keyframes saliSu {
             0% {
                 transform: translateY(0px) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% {
                 transform: translateY(calc(-70vh - 120px)) rotate(720deg) scale(0.9);
                 opacity: 0;
@@ -147,23 +201,11 @@
         }
 
         @keyframes scoppio {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.8);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.8); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
-        /* PALLONCINO BOMBA (movimento diverso) */
         .palloncino.bomba {
             animation: saliBomba linear forwards;
         }
@@ -173,22 +215,14 @@
                 transform: translateY(0px) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
-
-            10% {
-                opacity: 1;
-            }
-
-            50% {
-                transform: translateY(50%) rotate(180deg) scale(1.1);
-            }
-
+            10% { opacity: 1; }
+            50% { transform: translateY(50%) rotate(180deg) scale(1.1); }
             100% {
                 transform: translateY(calc(-70vh - 120px)) rotate(360deg) scale(0.9);
                 opacity: 0;
             }
         }
 
-        /* EFFETTO SCOPPIO */
         .scoppio-effetto {
             position: absolute;
             font-size: 2em;
@@ -198,18 +232,10 @@
         }
 
         @keyframes scoppioAnim {
-            0% {
-                transform: scale(0.5);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(2) translateY(-40px);
-                opacity: 0;
-            }
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2) translateY(-40px); opacity: 0; }
         }
 
-        /* PUNTEGGIO VOLANTE */
         .punteggio-volante {
             position: absolute;
             font-size: 1.8em;
@@ -222,22 +248,14 @@
         }
 
         @keyframes punteggioVolante {
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-80px) scale(1.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.5); opacity: 0; }
         }
 
         .punteggio-volante.negativo {
             color: #ff4444;
         }
 
-        /* GAME OVER */
         #game-over {
             position: absolute;
             top: 50%;
@@ -247,7 +265,7 @@
             color: #fff;
             font-size: 1.6em;
             display: none;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.8);
             padding: 30px 20px;
             border-radius: 24px;
             width: 90%;
@@ -257,12 +275,12 @@
             z-index: 20;
         }
 
-            #game-over .punti-finali {
-                font-size: 3em;
-                color: #FFD700;
-                font-weight: bold;
-                text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            }
+        #game-over .punti-finali {
+            font-size: 3em;
+            color: #FFD700;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
 
         .btn-rigioca {
             margin-top: 15px;
@@ -278,21 +296,10 @@
             box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
         }
 
-            .btn-rigioca:hover {
-                transform: scale(1.05);
-            }
-
-            .btn-rigioca:active {
-                transform: scale(0.95);
-            }
-
-        #game-over .sottotitolo {
-            font-size: 0.5em;
-            color: #aaa;
-            margin-top: 10px;
+        .btn-rigioca:hover {
+            transform: scale(1.05);
         }
 
-        /* BARRA DEL TEMPO */
         .timer-bar {
             position: absolute;
             bottom: 0;
@@ -304,7 +311,6 @@
             border-radius: 0 2px 2px 0;
         }
 
-        /* LEGENDA */
         .legenda {
             position: absolute;
             bottom: 10px;
@@ -322,33 +328,12 @@
         }
 
         @media (max-width: 480px) {
-            .palloncino {
-                font-size: 2.2em;
-                width: 48px;
-                height: 56px;
-            }
-
-            h1 {
-                font-size: 1.1em;
-            }
-
-            .info {
-                font-size: 0.85em;
-                gap: 20px;
-            }
-
-            #game-over {
-                font-size: 1.3em;
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .palloncino {
-                font-size: 1.8em;
-                width: 40px;
-                height: 48px;
-            }
+            .palloncino { font-size: 2.2em; width: 48px; height: 56px; }
+            h1 { font-size: 1.1em; }
+            .info { font-size: 0.85em; gap: 20px; }
+            #game-over { font-size: 1.3em; padding: 20px; }
+            #overlay h2 { font-size: 1.3em; }
+            #btnPlay { font-size: 1.1em; padding: 12px 35px; }
         }
     </style>
 </head>
@@ -360,11 +345,18 @@
         <div>🔥 <span id="combo">0</span>x</div>
     </div>
     <div id="game-container">
-        <!-- Nuvole decorative -->
         <div class="nuvola" style="top:10%;animation-duration:15s;animation-delay:0s;">☁️</div>
         <div class="nuvola" style="top:25%;animation-duration:18s;animation-delay:3s;">☁️</div>
         <div class="nuvola" style="top:15%;animation-duration:12s;animation-delay:6s;">☁️</div>
         <div class="nuvola" style="top:35%;animation-duration:20s;animation-delay:2s;">☁️</div>
+
+        <!-- OVERLAY PLAY -->
+        <div id="overlay">
+            <h2>🎈 Pronto a scoppiare?</h2>
+            <p>Scoppia i palloncini 🎈 per fare punti!<br>Attenzione alle bombe 💣, ti fanno perdere punti!</p>
+            <div class="legenda-play">🎯 Più palloncini scoppi, più alto è il combo!</div>
+            <button id="btnPlay">▶ Inizia!</button>
+        </div>
 
         <div class="timer-bar" id="timerBar" style="width:100%;"></div>
         <div id="game-over">
@@ -372,7 +364,7 @@
             <div class="punti-finali" id="puntiFinali">0</div>
             <div style="font-size:0.6em; color:#aaa;">palloncini scoppiati</div>
             <button class="btn-rigioca" onclick="ricomincia()">🔄 Rigioca</button>
-            <div class="sottotitolo">Scoppia i palloncini 🎈, evita le bombe 💣!</div>
+            <div class="sottotitolo">🎈 Scoppia | 💣 Evita</div>
         </div>
         <div class="legenda">🎈 Scoppia | 💣 Evita</div>
     </div>
@@ -386,11 +378,13 @@
             const timerBar = document.getElementById('timerBar');
             const gameOverDiv = document.getElementById('game-over');
             const puntiFinali = document.getElementById('puntiFinali');
+            const overlay = document.getElementById('overlay');
+            const btnPlay = document.getElementById('btnPlay');
 
             let punti = 0;
             let tempo = 30;
             let tempoMax = 30;
-            let giocoAttivo = true;
+            let giocoAttivo = false;
             let combo = 0;
             let ultimoScoppio = 0;
             const COOLDOWN_COMBO = 800;
@@ -417,7 +411,6 @@
                 const maxX = containerRect.width - size - 10;
                 const x = 10 + Math.random() * maxX;
 
-                // 70% palloncino, 30% bomba
                 const isPalloncino = Math.random() < 0.7;
 
                 let emoji;
@@ -428,7 +421,7 @@
                 }
 
                 const elemento = document.createElement('div');
-                elemento.className = 'palloncino' + (isPalloncino ? '' : ' bomba');
+                elemento.className = 'palloncino visibile' + (isPalloncino ? '' : ' bomba');
                 elemento.textContent = emoji;
                 elemento.style.left = x + 'px';
                 elemento.style.bottom = '-80px';
@@ -438,7 +431,6 @@
                 const durata = 3500 + Math.random() * 2000;
                 elemento.style.animationDuration = durata + 'ms';
 
-                // Eventi click/tap
                 elemento.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -453,7 +445,6 @@
 
                 container.appendChild(elemento);
 
-                // Rimuovi se arriva in cima
                 setTimeout(() => {
                     if (elemento.dataset.attivo === 'true') {
                         elemento.dataset.attivo = 'false';
@@ -474,7 +465,6 @@
                 const cy = rect.top + rect.height / 2 - containerRect.top;
 
                 if (elemento.dataset.tipo === 'palloncino') {
-                    // PALLONCINO SCOPPIATO ✅
                     const ora = Date.now();
                     if (ora - ultimoScoppio < COOLDOWN_COMBO) {
                         combo++;
@@ -516,7 +506,6 @@
                     }, 300);
 
                 } else {
-                    // BOMBA SCOPPIATA ❌
                     combo = 0;
                     comboSpan.textContent = '0';
 
@@ -580,8 +569,8 @@
                 comboSpan.textContent = '0';
                 timerBar.style.width = '100%';
                 gameOverDiv.style.display = 'none';
+                overlay.classList.add('nascosto');
 
-                // Rimuovi tutti gli elementi
                 document.querySelectorAll('.palloncino').forEach(el => el.remove());
                 document.querySelectorAll('.scoppio-effetto, .punteggio-volante').forEach(el => el.remove());
 
@@ -625,7 +614,6 @@
                     }
                 }, 4000);
 
-                // Genera palloncini iniziali
                 setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 200);
                 setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 500);
                 setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 800);
@@ -634,12 +622,21 @@
             }
 
             function ricomincia() {
-                avviaGioco();
+                giocoAttivo = false;
+                overlay.classList.remove('nascosto');
+                document.querySelectorAll('.palloncino').forEach(el => el.remove());
+                document.querySelectorAll('.scoppio-effetto, .punteggio-volante').forEach(el => el.remove());
+                gameOverDiv.style.display = 'none';
+                clearInterval(timerInterval);
+                clearInterval(spawnInterval);
+                clearInterval(difficoltaInterval);
             }
 
+            btnPlay.addEventListener('click', avviaGioco);
             window.addEventListener('resize', () => {});
 
-            avviaGioco();
+            // Avvia il gioco automaticamente solo se la pagina si ricarica (per test)
+            // Ma lasciamo che sia l'utente a cliccare "Play" grazie all'overlay
         })();
     </script>
 </body>
