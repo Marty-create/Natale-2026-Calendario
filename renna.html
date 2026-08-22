@@ -1,188 +1,89 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trova la renna</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
             background: #0a0e1a;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            padding: 10px;
-            touch-action: none;
+            min-height: 100vh;
+            padding: 15px;
+            margin: 0;
         }
-
-        h1 {
-            color: #ffd200;
-            font-size: 1.4em;
-            margin-bottom: 6px;
-            text-shadow: 0 0 20px rgba(255, 210, 0, 0.2);
-            letter-spacing: 1px;
-        }
-
-        .info {
-            color: #aab;
-            font-size: 1em;
-            display: flex;
-            gap: 40px;
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 6px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-        }
-
-            .info span {
-                font-weight: bold;
-                color: #fff;
-                min-width: 20px;
-                display: inline-block;
-            }
-
+        h1 { color: #ffd200; font-size: 1.2em; margin-bottom: 5px; text-align: center; }
+        .info { color: #aab; font-size: 0.85em; display: flex; gap: 25px; margin-bottom: 8px; }
+        .info span { font-weight: bold; color: #fff; }
         #container {
             position: relative;
             width: 100%;
-            max-width: 500px;
-            height: 62vh;
-            min-height: 350px;
-            background: radial-gradient(ellipse at 30% 20%, #1a2245, #0a0e1a);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            max-width: 400px;
+            height: 50vh;
+            max-height: 400px;
+            background: linear-gradient(180deg, #0d1225, #1a1f35);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
             overflow: hidden;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.6);
-            touch-action: none;
-            cursor: default;
         }
-
         #renna {
             position: absolute;
-            width: 72px;
-            height: 72px;
-            background: radial-gradient(circle at 30% 30%, #c68642, #6b3410);
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #A0522D, #5D2E0C);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8em;
-            box-shadow: 0 8px 30px rgba(139, 69, 19, 0.5), 0 0 40px rgba(255, 200, 50, 0.15);
-            transition: transform 0.08s ease;
+            font-size: 2em;
+            box-shadow: 0 8px 30px rgba(139, 69, 19, 0.4);
+            transition: transform 0.1s;
             will-change: transform, left, top;
-            touch-action: none;
-            z-index: 2;
-            pointer-events: auto;
+            display: none;
         }
+        #renna:active { transform: scale(0.9); }
+        #renna.visibile { display: flex; }
+        #renna.scomparsa { display: none; }
 
-            #renna:active {
-                transform: scale(0.85);
-            }
-
-            #renna.scomparsa {
-                display: none;
-            }
-
-            #renna.appare {
-                animation: lampeggio 0.25s ease 2;
-            }
-
-        @keyframes lampeggio {
-            0%, 100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-                box-shadow: 0 0 50px #ffd700;
-            }
-        }
-
-        #renna.fugge {
-            transition: left 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* STILE OGGETTI ESCA */
-        .esca {
+        #overlay {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 2.2em;
-            cursor: pointer;
-            z-index: 1;
-            animation: escaAppare 0.4s ease;
-            touch-action: none;
-            pointer-events: auto;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2);
-        }
-
-        @keyframes escaAppare {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            60% {
-                transform: scale(1.2);
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .esca.scomparsa {
-            animation: escaScompare 0.3s ease forwards;
-        }
-
-        @keyframes escaScompare {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
-        }
-
-        .particella {
-            position: absolute;
-            pointer-events: none;
-            font-size: 1.2em;
-            animation: volaVia 0.6s ease forwards;
+            background: rgba(10, 14, 26, 0.85);
             z-index: 10;
+            border-radius: 16px;
+            transition: opacity 0.5s ease;
         }
-
-        @keyframes volaVia {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(0.2);
-            }
+        #overlay.nascosto {
+            opacity: 0;
+            pointer-events: none;
         }
+        #overlay h2 { color: #ffd200; font-size: 1.5em; margin-bottom: 10px; }
+        #overlay p { color: #aab; font-size: 0.9em; margin-bottom: 20px; text-align: center; padding: 0 20px; }
+        #btnPlay {
+            padding: 12px 40px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        #btnPlay:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(247,151,30,0.3); }
 
         #fine {
             position: absolute;
@@ -191,512 +92,150 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #ffd200;
-            font-size: 1.8em;
+            font-size: 1.2em;
             display: none;
-            background: rgba(10, 14, 26, 0.92);
-            padding: 30px 20px;
-            border-radius: 24px;
+            background: rgba(10, 14, 26, 0.95);
+            padding: 20px;
+            border-radius: 16px;
             width: 90%;
-            max-width: 340px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 210, 0, 0.15);
+            max-width: 300px;
             z-index: 20;
         }
-
-            #fine .punti-finali {
-                font-size: 3em;
-                color: #4ecdc4;
-                font-weight: bold;
-                text-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
-            }
-
-            #fine .sottotitolo {
-                font-size: 0.5em;
-                color: #667;
-                margin-top: 10px;
-            }
-
+        #fine .punti-finali { font-size: 2em; color: #4ecdc4; }
+        #fine .sottotitolo { font-size: 0.6em; color: #889; margin-top: 8px; }
         .btn-rigioca {
-            margin-top: 18px;
-            padding: 12px 36px;
+            margin-top: 10px;
+            padding: 8px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             background: linear-gradient(135deg, #f7971e, #ffd200);
             color: #1a1f35;
             font-weight: bold;
-            font-size: 0.7em;
+            font-size: 0.8em;
             cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(255, 210, 0, 0.25);
         }
-
-            .btn-rigioca:hover {
-                transform: scale(1.05);
-                box-shadow: 0 6px 30px rgba(255, 210, 0, 0.4);
-            }
-
-            .btn-rigioca:active {
-                transform: scale(0.95);
-            }
-
-        .stella {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: brillo 3s infinite alternate;
-            pointer-events: none;
-        }
-
-        @keyframes brillo {
-            0% {
-                opacity: 0.1;
-                transform: scale(0.5);
-            }
-
-            100% {
-                opacity: 0.6;
-                transform: scale(1.2);
-            }
-        }
-
-        .bonus-msg {
-            position: absolute;
-            left: 50%;
-            top: 30%;
-            transform: translateX(-50%);
-            color: #ffd700;
-            font-size: 1.8em;
-            font-weight: bold;
-            text-shadow: 0 0 30px rgba(255,200,0,0.6);
-            pointer-events: none;
-            z-index: 15;
-            animation: volaVia 0.8s ease forwards;
-        }
-
-        .penalita-msg {
-            position: absolute;
-            left: 50%;
-            top: 30%;
-            transform: translateX(-50%);
-            color: #ff4444;
-            font-size: 1.8em;
-            font-weight: bold;
-            text-shadow: 0 0 30px rgba(255,68,68,0.6);
-            pointer-events: none;
-            z-index: 15;
-            animation: volaVia 0.8s ease forwards;
-        }
+        .btn-rigioca:hover { transform: scale(1.05); }
 
         @media (max-width: 480px) {
-            #renna {
-                width: 58px;
-                height: 58px;
-                font-size: 2.2em;
-            }
-
-            .esca {
-                width: 48px;
-                height: 48px;
-                font-size: 1.8em;
-            }
-
-            #fine {
-                font-size: 1.3em;
-                padding: 22px 16px;
-            }
-
-            .info {
-                gap: 24px;
-                font-size: 0.9em;
-                padding: 4px 16px;
-            }
-
-            h1 {
-                font-size: 1.1em;
-            }
-        }
-
-        @media (max-width: 380px) {
-            #renna {
-                width: 48px;
-                height: 48px;
-                font-size: 1.8em;
-            }
-
-            .esca {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5em;
-            }
+            #renna { width: 40px; height: 40px; font-size: 1.5em; }
+            #container { height: 45vh; max-height: 350px; }
+            h1 { font-size: 0.95em; }
+            #overlay h2 { font-size: 1.2em; }
+            #btnPlay { font-size: 1em; padding: 10px 30px; }
+            #fine { font-size: 1em; padding: 15px; }
         }
     </style>
 </head>
 <body>
     <h1>🦌 Trova la renna!</h1>
     <div class="info">
-        <div>⭐ <span id="punti">0</span></div>
+        <div>⭐ Punti: <span id="punti">0</span></div>
         <div>⏱️ <span id="timer">30</span>s</div>
-        <div>🔥 <span id="combo">0</span>x</div>
     </div>
     <div id="container">
-        <div class="stella" style="top:10%;left:15%;animation-delay:0.2s;"></div>
-        <div class="stella" style="top:25%;left:80%;animation-delay:1s;"></div>
-        <div class="stella" style="top:60%;left:10%;animation-delay:0.7s;"></div>
-        <div class="stella" style="top:80%;left:70%;animation-delay:1.5s;"></div>
-        <div class="stella" style="top:40%;left:92%;animation-delay:0.4s;"></div>
+        <!-- OVERLAY PLAY -->
+        <div id="overlay">
+            <h2>🎯 Pronto?</h2>
+            <p>Clicca su "Inizia" e trova la renna il più velocemente possibile!<br>Hai 30 secondi ⏱️</p>
+            <button id="btnPlay">▶ Inizia!</button>
+        </div>
 
-        <div id="renna" class="fugge">🦌</div>
+        <div id="renna">🦌</div>
+
         <div id="fine">
             <div>⏰ Tempo scaduto!</div>
             <div class="punti-finali" id="puntiFinali">0</div>
-            <div style="font-size:0.6em; color:#aab;">punti</div>
+            <div style="font-size:0.7em; color:#aab;">punti</div>
             <button class="btn-rigioca" onclick="ricomincia()">🔄 Rigioca</button>
-            <div class="sottotitolo">Tocca la renna, evita le esche! ⚠️</div>
+            <div class="sottotitolo">Ricarica la pagina per rigiocare</div>
         </div>
     </div>
 
     <script>
-        (function () {
-            const renna = document.getElementById('renna');
-            const container = document.getElementById('container');
-            const puntiSpan = document.getElementById('punti');
-            const timerSpan = document.getElementById('timer');
-            const comboSpan = document.getElementById('combo');
-            const fineDiv = document.getElementById('fine');
-            const puntiFinali = document.getElementById('puntiFinali');
+        const renna = document.getElementById('renna');
+        const container = document.getElementById('container');
+        const puntiSpan = document.getElementById('punti');
+        const timerSpan = document.getElementById('timer');
+        const fineDiv = document.getElementById('fine');
+        const puntiFinali = document.getElementById('puntiFinali');
+        const overlay = document.getElementById('overlay');
+        const btnPlay = document.getElementById('btnPlay');
 
-            let punti = 0;
-            let tempo = 30;
-            let giocoAttivo = true;
-            let timerInterval = null;
-            let spostaInterval = null;
-            let combo = 0;
-            let maxCombo = 0;
-            let ultimoClick = 0;
-            const COOLDOWN_COMBO = 850;
+        let punti = 0;
+        let tempo = 30;
+        let giocoAttivo = false;
+        let timerInterval = null;
+        let spostaInterval = null;
 
-            // Variabili per le esche
-            let escheAttive = [];
-            let escaInterval = null;
+        function spostaRenna() {
+            if (!giocoAttivo) return;
+            const rect = container.getBoundingClientRect();
+            const size = window.innerWidth <= 480 ? 40 : 50;
+            const maxX = Math.max(0, rect.width - size);
+            const maxY = Math.max(0, rect.height - size);
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            renna.style.left = x + 'px';
+            renna.style.top = y + 'px';
+        }
 
-            function getRennaSize() {
-                const w = window.innerWidth;
-                if (w <= 380) return 48;
-                if (w <= 480) return 58;
-                return 72;
-            }
+        function clickRenna(e) {
+            e.preventDefault();
+            if (!giocoAttivo) return;
+            punti++;
+            puntiSpan.textContent = punti;
+            spostaRenna();
+        }
 
-            function getEscaSize() {
-                const w = window.innerWidth;
-                if (w <= 380) return 40;
-                if (w <= 480) return 48;
-                return 60;
-            }
+        function avviaGioco() {
+            giocoAttivo = true;
+            punti = 0;
+            tempo = 30;
+            puntiSpan.textContent = '0';
+            timerSpan.textContent = '30';
+            renna.classList.add('visibile');
+            renna.classList.remove('scomparsa');
+            fineDiv.style.display = 'none';
+            overlay.classList.add('nascosto');
 
-            // ELEMENTI ESCA (tutti NON cliccabili)
-            const oggettiEsca = ['🍎', '🍌', '🍇', '🍊', '🍓', '🍉', '🍕', '🍔', '🌮', '🎀', '🧸', '🎈', '🎯', '⭐'];
+            if (timerInterval) clearInterval(timerInterval);
+            if (spostaInterval) clearInterval(spostaInterval);
 
-            function spostaRenna(animato = true) {
-                if (!giocoAttivo) return;
-                const rect = container.getBoundingClientRect();
-                const size = getRennaSize();
-                const padding = 6;
-                const maxX = rect.width - size - padding * 2;
-                const maxY = rect.height - size - padding * 2;
+            spostaRenna();
 
-                if (maxX <= 0 || maxY <= 0) {
-                    renna.style.left = '50%';
-                    renna.style.top = '50%';
-                    renna.style.transform = 'translate(-50%, -50%)';
-                    return;
+            timerInterval = setInterval(() => {
+                tempo--;
+                timerSpan.textContent = tempo;
+                if (tempo <= 0) {
+                    clearInterval(timerInterval);
+                    clearInterval(spostaInterval);
+                    giocoAttivo = false;
+                    renna.classList.remove('visibile');
+                    renna.classList.add('scomparsa');
+                    puntiFinali.textContent = punti;
+                    fineDiv.style.display = 'block';
                 }
+            }, 1000);
 
-                // Evita che la renna si sovrapponga alle esche
-                let x, y, tentativi = 0;
-                let sovrapposta = true;
-                while (sovrapposta && tentativi < 30) {
-                    x = padding + Math.random() * maxX;
-                    y = padding + Math.random() * maxY;
-                    sovrapposta = false;
-                    for (let esca of escheAttive) {
-                        const escaRect = esca.getBoundingClientRect();
-                        const containerRect = container.getBoundingClientRect();
-                        const escaX = escaRect.left - containerRect.left + escaRect.width / 2;
-                        const escaY = escaRect.top - containerRect.top + escaRect.height / 2;
-                        const dist = Math.sqrt((x + size / 2 - escaX) ** 2 + (y + size / 2 - escaY) ** 2);
-                        if (dist < size) {
-                            sovrapposta = true;
-                            break;
-                        }
-                    }
-                    tentativi++;
-                }
+            spostaInterval = setInterval(spostaRenna, 700);
+        }
 
-                if (animato) {
-                    renna.classList.add('fugge');
-                } else {
-                    renna.classList.remove('fugge');
-                }
-
-                renna.style.left = x + 'px';
-                renna.style.top = y + 'px';
-                renna.style.transform = '';
-
-                renna.classList.remove('appare');
-                void renna.offsetWidth;
-                renna.classList.add('appare');
-                setTimeout(() => renna.classList.remove('appare'), 300);
-            }
-
-            // CREA UN'ESCA
-            function creaEsca() {
-                if (!giocoAttivo) return;
-                if (escheAttive.length >= 4) return; // Massimo 4 esche alla volta
-
-                const rect = container.getBoundingClientRect();
-                const size = getEscaSize();
-                const padding = 10;
-                const maxX = rect.width - size - padding * 2;
-                const maxY = rect.height - size - padding * 2;
-
-                if (maxX <= 0 || maxY <= 0) return;
-
-                // Posiziona l'esca lontano dalla renna
-                let x, y, tentativi = 0;
-                let vicino = true;
-                const rennaRect = renna.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                const rennaX = rennaRect.left - containerRect.left + rennaRect.width / 2;
-                const rennaY = rennaRect.top - containerRect.top + rennaRect.height / 2;
-
-                while (vicino && tentativi < 30) {
-                    x = padding + Math.random() * maxX;
-                    y = padding + Math.random() * maxY;
-                    const dist = Math.sqrt((x + size / 2 - rennaX) ** 2 + (y + size / 2 - rennaY) ** 2);
-                    vicino = dist < 100;
-                    tentativi++;
-                }
-
-                const esca = document.createElement('div');
-                esca.className = 'esca';
-                esca.textContent = oggettiEsca[Math.floor(Math.random() * oggettiEsca.length)];
-                esca.style.left = x + 'px';
-                esca.style.top = y + 'px';
-                esca.dataset.attivo = 'true';
-
-                // CLICK SULL'ESCA = PENALITÀ!
-                esca.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (!giocoAttivo) return;
-                    if (this.dataset.attivo === 'false') return;
-
-                    // PENALITÀ: -2 punti
-                    punti = Math.max(0, punti - 2);
-                    puntiSpan.textContent = punti;
-
-                    // Messaggio di penalità
-                    const msg = document.createElement('div');
-                    msg.className = 'penalita-msg';
-                    msg.textContent = '💔 -2';
-                    container.appendChild(msg);
-                    setTimeout(() => msg.remove(), 800);
-
-                    // Rimuovi l'esca
-                    this.dataset.attivo = 'false';
-                    this.classList.add('scomparsa');
-                    setTimeout(() => {
-                        if (this.parentNode) this.remove();
-                        const index = escheAttive.indexOf(this);
-                        if (index > -1) escheAttive.splice(index, 1);
-                    }, 300);
-                });
-
-                esca.addEventListener('touchstart', function (e) {
-                    e.preventDefault();
-                    // Simula il click
-                    this.click();
-                }, { passive: false });
-
-                container.appendChild(esca);
-                escheAttive.push(esca);
-
-                // L'esca si auto-rimuove dopo 4 secondi se non cliccata
-                setTimeout(() => {
-                    if (esca.dataset.attivo === 'true') {
-                        esca.dataset.attivo = 'false';
-                        esca.classList.add('scomparsa');
-                        setTimeout(() => {
-                            if (esca.parentNode) esca.remove();
-                            const index = escheAttive.indexOf(esca);
-                            if (index > -1) escheAttive.splice(index, 1);
-                        }, 300);
-                    }
-                }, 4000);
-            }
-
-            function creaParticelle(x, y) {
-                const emoji = ['✨', '⭐', '🌟', '💫', '🎄', '☃️'];
-                for (let i = 0; i < 6; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'particella';
-                    p.textContent = emoji[Math.floor(Math.random() * emoji.length)];
-                    p.style.left = (x + (Math.random() - 0.5) * 30) + 'px';
-                    p.style.top = (y + (Math.random() - 0.5) * 30) + 'px';
-                    const angolo = Math.random() * 2 * Math.PI;
-                    const dist = 40 + Math.random() * 80;
-                    p.style.setProperty('--tx', Math.cos(angolo) * dist + 'px');
-                    p.style.setProperty('--ty', Math.sin(angolo) * dist + 'px');
-                    container.appendChild(p);
-                    setTimeout(() => p.remove(), 700);
-                }
-            }
-
-            function gestisciClick(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (!giocoAttivo) {
-                    return;
-                }
-
-                const rect = renna.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2 - containerRect.left;
-                const cy = rect.top + rect.height / 2 - containerRect.top;
-                creaParticelle(cx, cy);
-
-                const ora = Date.now();
-                if (ora - ultimoClick < COOLDOWN_COMBO) {
-                    combo++;
-                    if (combo > maxCombo) maxCombo = combo;
-                } else {
-                    combo = 1;
-                }
-                ultimoClick = ora;
-
-                let puntiAggiunti = 1;
-                if (combo >= 5 && combo % 5 === 0) {
-                    puntiAggiunti = 3;
-                    const bonus = document.createElement('div');
-                    bonus.className = 'bonus-msg';
-                    bonus.textContent = '🔥 BONUS!';
-                    container.appendChild(bonus);
-                    setTimeout(() => bonus.remove(), 800);
-                }
-
-                punti += puntiAggiunti;
-                puntiSpan.textContent = punti;
-                comboSpan.textContent = combo;
-
-                renna.style.transition = 'transform 0.08s ease';
-                renna.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    renna.style.transform = 'scale(1)';
-                }, 100);
-
-                const delay = Math.max(100, 250 - combo * 6);
-                setTimeout(() => {
-                    spostaRenna(true);
-                }, delay);
-            }
-
-            function avviaGioco() {
-                giocoAttivo = true;
-                punti = 0;
-                tempo = 30;
-                combo = 0;
-                maxCombo = 0;
-                ultimoClick = 0;
-
-                // Rimuovi tutte le esche
-                for (let esca of escheAttive) {
-                    if (esca.parentNode) esca.remove();
-                }
-                escheAttive = [];
-
-                puntiSpan.textContent = '0';
-                timerSpan.textContent = '30';
-                comboSpan.textContent = '0';
-                renna.classList.remove('scomparsa');
-                fineDiv.style.display = 'none';
-
-                if (timerInterval) clearInterval(timerInterval);
-                if (spostaInterval) clearInterval(spostaInterval);
-                if (escaInterval) clearInterval(escaInterval);
-
-                setTimeout(() => spostaRenna(false), 50);
-
-                timerInterval = setInterval(() => {
-                    tempo--;
-                    timerSpan.textContent = tempo;
-                    if (tempo <= 0) {
-                        clearInterval(timerInterval);
-                        clearInterval(spostaInterval);
-                        clearInterval(escaInterval);
-                        giocoAttivo = false;
-                        renna.classList.add('scomparsa');
-                        puntiFinali.textContent = punti;
-                        fineDiv.style.display = 'block';
-                    }
-                }, 1000);
-
-                // Movimento renna
-                let intervalloSpostamento = 900;
-                spostaInterval = setInterval(() => {
-                    if (giocoAttivo) {
-                        spostaRenna(true);
-                    }
-                }, intervalloSpostamento);
-
-                // Accelerazione
-                let riduzioni = 0;
-                const riduciIntervallo = setInterval(() => {
-                    if (!giocoAttivo) { clearInterval(riduciIntervallo); return; }
-                    riduzioni++;
-                    if (riduzioni >= 6) { clearInterval(riduciIntervallo); return; }
-                    if (riduzioni % 2 === 0) {
-                        clearInterval(spostaInterval);
-                        const nuovo = Math.max(420, 900 - riduzioni * 35);
-                        spostaInterval = setInterval(() => {
-                            if (giocoAttivo) spostaRenna(true);
-                        }, nuovo);
-                    }
-                }, 5500);
-
-                // GENERAZIONE ESCHE: ogni 3-5 secondi
-                escaInterval = setInterval(() => {
-                    if (giocoAttivo && Math.random() < 0.6) { // 60% di probabilità
-                        creaEsca();
-                    }
-                }, 3500 + Math.random() * 2000);
-            }
-
-            function ricomincia() {
-                avviaGioco();
-            }
-
-            // Eventi
-            renna.addEventListener('click', gestisciClick);
-            renna.addEventListener('touchstart', gestisciClick, { passive: false });
-            renna.addEventListener('touchend', function (e) {
-                e.preventDefault();
-            }, { passive: false });
-
-            renna.style.touchAction = 'none';
-            renna.style.pointerEvents = 'auto';
-
-            console.log('🎮 Gioco avviato! Clicca sulla renna 🦌, evita le esche!');
-
-            window.addEventListener('resize', () => {
-                if (giocoAttivo) spostaRenna(false);
-            });
-
+        function ricomincia() {
             avviaGioco();
-        })();
+        }
+
+        // Eventi
+        btnPlay.addEventListener('click', avviaGioco);
+        renna.addEventListener('click', clickRenna);
+        renna.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            clickRenna(e);
+        });
+
+        // Adatta la dimensione quando cambia la finestra
+        window.addEventListener('resize', () => {
+            if (giocoAttivo) spostaRenna();
+        });
     </script>
 </body>
 </html>
