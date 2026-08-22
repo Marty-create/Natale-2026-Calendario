@@ -78,7 +78,7 @@ const MAPPA_FOTO_AMICI = {
 };
 
 // ============================================================
-// 3. MAPPA FOTO DI GRUPPO (UGUALI PER TUTTI)  ← AGGIUNTA!
+// 3. MAPPA FOTO DI GRUPPO (UGUALI PER TUTTI)
 // ============================================================
 
 const MAPPA_FOTO_GRUPPO = {
@@ -242,13 +242,13 @@ function renderizzaContenuto(data, giorno) {
     let html = `<h2>${data.titolo || `🎁 Giorno ${giorno}`}</h2>`;
 
     // Sostituisco {nome} nel testo
-  let testo = data.testo || '';
-testo = testo.replace(/\{nome\}/g, nome);
+    let testo = data.testo || '';
+    testo = testo.replace(/\{nome\}/g, nome);
 
-// 🔧 CONVERTE I LINK IN LINK CLICCABILI
-testo = testo.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+    // 🔥 CONVERTE I LINK IN LINK CLICCABILI
+    testo = testo.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-html += `<div class="testo">${testo.replace(/\n/g, '<br>')}</div>`;
+    html += `<div class="testo">${testo.replace(/\n/g, '<br>')}</div>`;
 
     // IMMAGINE: Uso la mappa delle foto in base al nome e al tipo
     if (data.immagine) {
@@ -412,13 +412,19 @@ function login() {
             renderizzaContenuto(data, ultimoGiorno);
         });
     } else {
+        // 🔥 MESSAGGIO DI BENVENUTO (appare SOPRA le caselle)
         contenutoGiornoDiv.innerHTML = `
             <h2>🎄 Benvenuto, ${nomeUtente}!</h2>
             <div class="testo">
-                Apri un giorno del calendario per scoprire la sorpresa di oggi!<br><br>
-                🗓️ Ogni giorno, dal 1 al 24 dicembre, troverai qualcosa di speciale.<br>
-                🎅 I giorni futuri sono bloccati... dovrai aspettare!<br><br>
-                Buon Avvento! ⭐
+                Ciao <strong>${nomeUtente}</strong>! 👋<br><br>
+                Questo è il tuo calendario dell'avvento personalizzato!<br><br>
+                🗓️ Ogni giorno, dal 1 al 24 dicembre, troverai una sorpresa:<br>
+                • Barzellette per ridere 😂<br>
+                • Foto e ricordi speciali 📸<br>
+                • Mini-giochi per sfidarti 🎮<br>
+                • Task creativi da fare 🎨<br><br>
+                🎅 I giorni futuri sono bloccati... dovrai aspettare il giorno giusto per aprirli!<br><br>
+                Buon Avvento, <strong>${nomeUtente}</strong>! ⭐
             </div>
         `;
     }
