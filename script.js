@@ -242,9 +242,13 @@ function renderizzaContenuto(data, giorno) {
     let html = `<h2>${data.titolo || `🎁 Giorno ${giorno}`}</h2>`;
 
     // Sostituisco {nome} nel testo
-    let testo = data.testo || '';
-    testo = testo.replace(/\{nome\}/g, nome);
-    html += `<div class="testo">${testo.replace(/\n/g, '<br>')}</div>`;
+  let testo = data.testo || '';
+testo = testo.replace(/\{nome\}/g, nome);
+
+// 🔧 CONVERTE I LINK IN LINK CLICCABILI
+testo = testo.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+html += `<div class="testo">${testo.replace(/\n/g, '<br>')}</div>`;
 
     // IMMAGINE: Uso la mappa delle foto in base al nome e al tipo
     if (data.immagine) {
