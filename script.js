@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // 1. COSTANTI E VARIABILI GLOBALI
 // ============================================================
 
@@ -13,68 +13,77 @@ let statoUtente = null;
 // ============================================================
 
 const MAPPA_FOTO_AMICI = {
-    'Ale': {
+    'ale': {
         'foto1': 'https://i.imgur.com/3BeK4IJ.jpeg',
         'foto2': 'https://i.imgur.com/znlNfTR.jpeg',
         'foto3': 'https://i.imgur.com/Cg4VAnD.jpeg',
         'foto4': 'https://i.imgur.com/nvboBaX.jpeg',
         'foto5': 'https://i.imgur.com/qcF28ZU.jpeg'
     },
-    'Alessia': {
+    'alessia': {
         'foto1': 'https://i.imgur.com/XojOIZ8.jpeg',
         'foto2': 'https://i.imgur.com/SQuektT.jpeg',
         'foto3': 'https://i.imgur.com/cJVubzo.jpeg',
         'foto4': 'https://i.imgur.com/iWUzIzC.jpeg'
     },
-    'Barba': {
+    'barba': {
         'foto1': 'https://i.imgur.com/m2ztf3l.jpeg',
         'foto2': 'https://i.imgur.com/UjvWpbG.jpeg',
         'foto3': 'https://i.imgur.com/fIuTSER.jpeg',
         'foto4': 'https://i.imgur.com/R6VDOJH.jpeg',
         'foto5': 'https://i.imgur.com/D31nb5S.jpeg'
     },
-    'Carla': {
+    'carla': {
         'foto1': 'https://i.imgur.com/LPe9gKO.jpeg',
         'foto2': 'https://i.imgur.com/TclNj0r.jpeg',
         'foto3': 'https://i.imgur.com/6TZuPii.jpeg',
         'foto4': ''
     },
-    'Cuggi': {
+    'cuggi': {
         'foto1': 'https://i.imgur.com/Ha1Eyyi.jpeg',
         'foto2': 'https://i.imgur.com/qxY9Nez.jpeg',
         'foto3': 'https://i.imgur.com/27n4ZnU.jpeg',
         'foto4': 'https://i.imgur.com/09hVrGA.jpeg'
     },
-    'Eli': {
+    'eli': {
         'foto1': 'https://i.imgur.com/CxWKolw.jpeg',
         'foto2': 'https://i.imgur.com/JEJR4EK.jpeg',
         'foto3': 'https://i.imgur.com/CPCensr.jpeg',
         'foto4': 'https://i.imgur.com/f84WAle.jpeg'
     },
-    'Fra': {
+    'fra': {
         'foto1': 'https://i.imgur.com/N20Ma3u.jpeg',
         'foto2': 'https://i.imgur.com/aVAgOJR.jpeg',
         'foto3': 'https://i.imgur.com/kyXCF6M.jpeg',
         'foto4': 'https://i.imgur.com/mlSxeNS.jpeg'
     },
-    'Jo': {
+    'jo': {
         'foto1': 'https://i.imgur.com/P8WuqHi.jpeg',
         'foto2': 'https://i.imgur.com/HEOekCY.jpeg',
         'foto3': 'https://i.imgur.com/Gqt91cr.jpeg',
         'foto4': 'https://i.imgur.com/59UD5FC.jpeg'
     },
-    'Sara': {
+    'sara': {
         'foto1': 'https://i.imgur.com/5ToMzEM.jpeg',
         'foto2': 'https://i.imgur.com/d79viZx.jpeg',
         'foto3': 'https://i.imgur.com/TPXqgfx.jpeg',
         'foto4': 'https://i.imgur.com/BpYSzoM.jpeg'
     },
-    'Marta': {
+    'marta': {
         'foto1': 'https://i.imgur.com/Qt3s2Tf.jpeg',
         'foto2': 'https://i.imgur.com/cQe0hkl.jpeg',
         'foto3': 'https://i.imgur.com/w3qUBq9.jpeg',
         'foto4': 'https://i.imgur.com/SsVMecY.jpeg'
-    },
+    }
+};
+
+// ============================================================
+// 3. MAPPA FOTO DI GRUPPO (UGUALI PER TUTTI)  ← AGGIUNTA!
+// ============================================================
+
+const MAPPA_FOTO_GRUPPO = {
+    'gruppo1': 'https://via.placeholder.com/400x300/1a1f35/ffd200?text=Foto+di+Gruppo',
+    'natale': 'https://via.placeholder.com/400x300/1a1f35/ffd200?text=Buon+Natale'
 };
 
 // ============================================================
@@ -132,7 +141,7 @@ function creaNuovoStato() {
 function getLinkFoto(nome, tipo) {
     if (!nome) nome = 'default';
 
-    const nomeOriginale = nome.trim();
+    const nomeMinuscolo = nome.toLowerCase().trim();
 
     // 1. Controllo se è una foto di gruppo
     if (MAPPA_FOTO_GRUPPO[tipo]) {
@@ -140,8 +149,8 @@ function getLinkFoto(nome, tipo) {
     }
 
     // 2. Controllo se l'amico esiste nella mappa
-    if (MAPPA_FOTO_AMICI[nomeOriginale]) {
-        const fotoAmico = MAPPA_FOTO_AMICI[nomeOriginale];
+    if (MAPPA_FOTO_AMICI[nomeMinuscolo]) {
+        const fotoAmico = MAPPA_FOTO_AMICI[nomeMinuscolo];
 
         // 3. Se il tipo è una chiave (es. "foto1", "foto2"), cerco quella specifica
         if (fotoAmico[tipo]) {
