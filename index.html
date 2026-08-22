@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🎄 Calendario dell'Avvento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SCHERMATA DI LOGIN -->
+    <div id="schermataLogin">
+        <div class="login-box">
+            <h1>🎄 Calendario dell'Avvento</h1>
+            <p>Inserisci il tuo nome per iniziare l'avventura!</p>
+            <input type="text" id="inputNome" placeholder="Il tuo nome..." autocomplete="off">
+            <button id="btnLogin">Entra 🎅</button>
+            <p id="erroreLogin" class="errore"></p>
+        </div>
+    </div>
+
+    <!-- SCHERMATA DEL CALENDARIO -->
+    <div id="schermataCalendario" style="display:none;">
+        <header>
+            <div>
+                <h1>🎄 Calendario dell'Avvento</h1>
+                <p>Ciao, <span id="nomeUtente"></span>! 👋</p>
+            </div>
+            <button id="btnReset" class="btn-reset">🔄 Ricomincia</button>
+        </header>
+
+        <div id="calendario"></div>
+
+        <div id="contenutoGiorno" class="contenuto-giorno">
+            <!-- Qui viene mostrato il contenuto del giorno cliccato -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

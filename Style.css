@@ -1,0 +1,315 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0e1a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ===== LOGIN ===== */
+#schermataLogin {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-box {
+    background: linear-gradient(145deg, #1a1f35, #0d1225);
+    padding: 40px 30px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+    .login-box h1 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .login-box p {
+        color: #aab;
+        margin-bottom: 20px;
+        font-size: 1em;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 14px 20px;
+        border-radius: 12px;
+        border: 2px solid #2a3050;
+        background: #12182b;
+        color: #fff;
+        font-size: 1.1em;
+        outline: none;
+        transition: border 0.3s;
+    }
+
+        .login-box input:focus {
+            border-color: #f7971e;
+        }
+
+    .login-box button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        color: #1a1f35;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .login-box button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(247, 151, 30, 0.3);
+        }
+
+.errore {
+    color: #ff6b6b;
+    font-size: 0.9em;
+    margin-top: 12px;
+    display: block;
+    min-height: 1.5em;
+}
+
+/* ===== CALENDARIO ===== */
+#schermataCalendario {
+    width: 100%;
+    max-width: 800px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 10px;
+}
+
+    header h1 {
+        font-size: 1.8em;
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    header p {
+        color: #aab;
+        font-size: 1.1em;
+    }
+
+#nomeUtente {
+    color: #ffd200;
+    -webkit-text-fill-color: #ffd200;
+    font-weight: bold;
+}
+
+.btn-reset {
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    background: transparent;
+    color: #889;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.3s;
+}
+
+    .btn-reset:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+/* Griglia del calendario */
+#calendario {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 600px) {
+    #calendario {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.giorno {
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(145deg, #1a1f35, #12182b);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    position: relative;
+    color: #445;
+    user-select: none;
+    padding: 5px;
+}
+
+    .giorno .numero {
+        font-size: 0.5em;
+        color: #667;
+        margin-top: 2px;
+    }
+
+    /* Stati del giorno */
+    .giorno.sbloccato {
+        border-color: #f7971e;
+        color: #fff;
+        background: linear-gradient(145deg, #1f2640, #161d33);
+    }
+
+        .giorno.sbloccato:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(247, 151, 30, 0.15);
+        }
+
+    .giorno.aperto {
+        border-color: #4ecdc4;
+        background: linear-gradient(145deg, #1a3a35, #0f2a26);
+        color: #4ecdc4;
+    }
+
+    .giorno.bloccato {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .giorno .check {
+        font-size: 0.4em;
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        color: #4ecdc4;
+    }
+
+/* ===== CONTENUTO DEL GIORNO ===== */
+.contenuto-giorno {
+    background: linear-gradient(145deg, #1a1f35, #0d1225);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: 200px;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contenuto-giorno h2 {
+    color: #ffd200;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.contenuto-giorno .testo {
+    font-size: 1.05em;
+    line-height: 1.8;
+    color: #ccd;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.contenuto-giorno img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 15px;
+    display: block;
+}
+
+.contenuto-giorno video {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 15px;
+    display: block;
+}
+
+.contenuto-giorno iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 15px;
+    background: #0a0e1a;
+}
+
+.contenuto-giorno audio {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.contenuto-giorno .data-apertura {
+    font-size: 0.8em;
+    color: #667;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .login-box h1 {
+        font-size: 1.6em;
+    }
+
+    .login-box {
+        padding: 30px 20px;
+    }
+
+    header h1 {
+        font-size: 1.3em;
+    }
+
+    #calendario {
+        gap: 10px;
+    }
+
+    .giorno {
+        font-size: 1.2em;
+        border-radius: 12px;
+    }
+
+    .contenuto-giorno {
+        padding: 20px;
+    }
+
+        .contenuto-giorno iframe {
+            height: 250px;
+        }
+}

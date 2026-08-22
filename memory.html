@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Natalizio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0a0e1a;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #ffd200;
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 3px;
+        }
+
+        .info {
+            color: #aab;
+            font-size: 0.85em;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .carta {
+            aspect-ratio: 1 / 1;
+            background: linear-gradient(145deg, #1a1f35, #0d1225);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 2px solid #2a3050;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+            .carta.scoperta {
+                background: linear-gradient(145deg, #1a3a35, #0f2a26);
+                border-color: #4ecdc4;
+                transform: scale(0.98);
+            }
+
+            .carta.abbassata {
+                opacity: 0.25;
+                cursor: default;
+                transform: scale(0.92);
+                border-color: #1a2a25;
+            }
+
+            .carta:active:not(.abbassata):not(.scoperta) {
+                transform: scale(0.92);
+            }
+
+        .statistiche {
+            display: flex;
+            justify-content: space-between;
+            color: #aab;
+            font-size: 0.9em;
+            margin-top: 12px;
+            padding: 0 5px;
+        }
+
+            .statistiche span {
+                color: #4ecdc4;
+                font-weight: bold;
+            }
+
+        .vittoria {
+            color: #ffd200;
+            font-size: 1.3em;
+            text-align: center;
+            margin-top: 10px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .btn {
+            margin-top: 12px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: transform 0.2s;
+        }
+
+            .btn:hover {
+                transform: scale(1.03);
+            }
+
+        @media (max-width: 480px) {
+            .grid {
+                gap: 8px;
+            }
+
+            .carta {
+                font-size: 1.6em;
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🧠 Memory Natalizio</h1>
+        <div class="info">Trova tutte le coppie!</div>
+        <div class="grid" id="grid"></div>
+        <div class="statistiche">
+            <div>🎯 Tentativi: <span id="tentativi">0</span></div>
+            <div>✅ Coppie: <span id="coppie">0</span>/8</div>
+        </div>
+        <div class="vittoria" id="vittoria"></div>
+        <button class="btn" onclick="ricomincia()">🔄 Nuova partita</button>
+    </div>
+
+    <script>
+        const emoji = ['🎄', '🎅', '🦌', '🔔', '⭐', '❄️', '🎁', '☃️'];
+        let carte = [];
+        let carteScoperte = [];
+        let blocca = false;
+        let tentativi = 0;
+        let coppieTrovate = 0;
+
+        function mescola(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function creaCarte() {
+            const coppie = [...emoji, ...emoji];
+            return mescola(coppie).map((emoji, index) => ({
+                id: index,
+                emoji: emoji,
+                scoperta: false,
+                abbassata: false
+            }));
+        }
+
+        function renderizza() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            carte.forEach((carta, index) => {
+                const div = document.createElement('div');
+                div.className = 'carta';
+                if (carta.scoperta) {
+                    div.classList.add('scoperta');
+                    div.textContent = carta.emoji;
+                } else {
+                    div.textContent = '🎄';
+                }
+                if (carta.abbassata) {
+                    div.classList.add('abbassata');
+                }
+                div.addEventListener('click', () => cliccaCarta(index));
+                grid.appendChild(div);
+            });
+            document.getElementById('tentativi').textContent = tentativi;
+            document.getElementById('coppie').textContent = coppieTrovate;
+        }
+
+        function cliccaCarta(index) {
+            if (blocca) return;
+            const carta = carte[index];
+            if (carta.scoperta || carta.abbassata) return;
+
+            carta.scoperta = true;
+            carteScoperte.push(index);
+            renderizza();
+
+            if (carteScoperte.length === 2) {
+                blocca = true;
+                tentativi++;
+                const [i1, i2] = carteScoperte;
+                if (carte[i1].emoji === carte[i2].emoji) {
+                    carte[i1].abbassata = true;
+                    carte[i2].abbassata = true;
+                    coppieTrovate++;
+                    carteScoperte = [];
+                    blocca = false;
+                    renderizza();
+                    if (coppieTrovate === emoji.length) {
+                        document.getElementById('vittoria').textContent = '🎉 COMPLETATO! 🎉';
+                    }
+                } else {
+                    setTimeout(() => {
+                        carte[i1].scoperta = false;
+                        carte[i2].scoperta = false;
+                        carteScoperte = [];
+                        blocca = false;
+                        renderizza();
+                    }, 700);
+                }
+                document.getElementById('tentativi').textContent = tentativi;
+            }
+        }
+
+        function ricomincia() {
+            carte = creaCarte();
+            carteScoperte = [];
+            blocca = false;
+            tentativi = 0;
+            coppieTrovate = 0;
+            document.getElementById('vittoria').textContent = '';
+            renderizza();
+        }
+
+        // Avvia
+        ricomincia();
+    </script>
+</body>
+</html>

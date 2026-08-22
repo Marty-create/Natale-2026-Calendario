@@ -1,0 +1,646 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🎈 Scoppia i Palloncini</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(180deg, #87CEEB, #4A90D9);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            padding: 10px;
+            touch-action: none;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 1.4em;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .info {
+            color: #fff;
+            font-size: 0.95em;
+            display: flex;
+            gap: 30px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            text-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+
+            .info span {
+                font-weight: bold;
+                color: #fff;
+                min-width: 20px;
+            }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 70vh;
+            min-height: 450px;
+            background: linear-gradient(180deg, #4A90D9, #2E6BB5);
+            border-radius: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.2);
+            touch-action: none;
+            cursor: default;
+        }
+
+        /* NUVOLE DECORATIVE */
+        .nuvola {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 3em;
+            pointer-events: none;
+            animation: nuvolaMovimento linear infinite;
+        }
+
+        @keyframes nuvolaMovimento {
+            0% {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateX(calc(400px + 100px));
+                opacity: 0;
+            }
+        }
+
+        /* PALLONCINI */
+        .palloncino {
+            position: absolute;
+            font-size: 2.8em;
+            width: 60px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            cursor: pointer;
+            pointer-events: auto;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.2));
+            touch-action: none;
+            transition: transform 0.1s;
+            /* PARTE DAL BASSO */
+            bottom: -80px;
+            animation: saliSu linear forwards;
+        }
+
+            .palloncino:active {
+                transform: scale(0.85);
+            }
+
+        @keyframes saliSu {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(calc(-70vh - 120px)) rotate(720deg) scale(0.9);
+                opacity: 0;
+            }
+        }
+
+        .palloncino.scoppiato {
+            animation: scoppio 0.3s ease forwards !important;
+            pointer-events: none;
+        }
+
+        @keyframes scoppio {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.8);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* PALLONCINO BOMBA (movimento diverso) */
+        .palloncino.bomba {
+            animation: saliBomba linear forwards;
+        }
+
+        @keyframes saliBomba {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(50%) rotate(180deg) scale(1.1);
+            }
+
+            100% {
+                transform: translateY(calc(-70vh - 120px)) rotate(360deg) scale(0.9);
+                opacity: 0;
+            }
+        }
+
+        /* EFFETTO SCOPPIO */
+        .scoppio-effetto {
+            position: absolute;
+            font-size: 2em;
+            pointer-events: none;
+            z-index: 10;
+            animation: scoppioAnim 0.6s ease forwards;
+        }
+
+        @keyframes scoppioAnim {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2) translateY(-40px);
+                opacity: 0;
+            }
+        }
+
+        /* PUNTEGGIO VOLANTE */
+        .punteggio-volante {
+            position: absolute;
+            font-size: 1.8em;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+            animation: punteggioVolante 0.8s ease forwards;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        @keyframes punteggioVolante {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-80px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .punteggio-volante.negativo {
+            color: #ff4444;
+        }
+
+        /* GAME OVER */
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            font-size: 1.6em;
+            display: none;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 30px 20px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 320px;
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 20;
+        }
+
+            #game-over .punti-finali {
+                font-size: 3em;
+                color: #FFD700;
+                font-weight: bold;
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+
+        .btn-rigioca {
+            margin-top: 15px;
+            padding: 12px 36px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+        }
+
+            .btn-rigioca:hover {
+                transform: scale(1.05);
+            }
+
+            .btn-rigioca:active {
+                transform: scale(0.95);
+            }
+
+        #game-over .sottotitolo {
+            font-size: 0.5em;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        /* BARRA DEL TEMPO */
+        .timer-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #FFD700, #FF6B6B);
+            z-index: 6;
+            transition: width 0.3s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* LEGENDA */
+        .legenda {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6em;
+            color: rgba(255,255,255,0.4);
+            z-index: 1;
+            text-align: center;
+            pointer-events: none;
+            background: rgba(0,0,0,0.2);
+            padding: 3px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+            .palloncino {
+                font-size: 2.2em;
+                width: 48px;
+                height: 56px;
+            }
+
+            h1 {
+                font-size: 1.1em;
+            }
+
+            .info {
+                font-size: 0.85em;
+                gap: 20px;
+            }
+
+            #game-over {
+                font-size: 1.3em;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .palloncino {
+                font-size: 1.8em;
+                width: 40px;
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎈 Scoppia i Palloncini!</h1>
+    <div class="info">
+        <div>🎯 <span id="punti">0</span></div>
+        <div>⏱️ <span id="timer">30</span>s</div>
+        <div>🔥 <span id="combo">0</span>x</div>
+    </div>
+    <div id="game-container">
+        <!-- Nuvole decorative -->
+        <div class="nuvola" style="top:10%;animation-duration:15s;animation-delay:0s;">☁️</div>
+        <div class="nuvola" style="top:25%;animation-duration:18s;animation-delay:3s;">☁️</div>
+        <div class="nuvola" style="top:15%;animation-duration:12s;animation-delay:6s;">☁️</div>
+        <div class="nuvola" style="top:35%;animation-duration:20s;animation-delay:2s;">☁️</div>
+
+        <div class="timer-bar" id="timerBar" style="width:100%;"></div>
+        <div id="game-over">
+            <div>⏰ Tempo scaduto!</div>
+            <div class="punti-finali" id="puntiFinali">0</div>
+            <div style="font-size:0.6em; color:#aaa;">palloncini scoppiati</div>
+            <button class="btn-rigioca" onclick="ricomincia()">🔄 Rigioca</button>
+            <div class="sottotitolo">Scoppia i palloncini 🎈, evita le bombe 💣!</div>
+        </div>
+        <div class="legenda">🎈 Scoppia | 💣 Evita</div>
+    </div>
+
+    <script>
+        (function() {
+            const container = document.getElementById('game-container');
+            const puntiSpan = document.getElementById('punti');
+            const timerSpan = document.getElementById('timer');
+            const comboSpan = document.getElementById('combo');
+            const timerBar = document.getElementById('timerBar');
+            const gameOverDiv = document.getElementById('game-over');
+            const puntiFinali = document.getElementById('puntiFinali');
+
+            let punti = 0;
+            let tempo = 30;
+            let tempoMax = 30;
+            let giocoAttivo = true;
+            let combo = 0;
+            let ultimoScoppio = 0;
+            const COOLDOWN_COMBO = 800;
+
+            let timerInterval = null;
+            let spawnInterval = null;
+            let difficoltaInterval = null;
+
+            const PALLONCINI = ['🎈', '🎈', '🎈', '🎈', '🎈', '🎈'];
+            const BOMBE = ['💣', '🧨'];
+
+            function getPalloncinoSize() {
+                const w = window.innerWidth;
+                if (w <= 380) return 40;
+                if (w <= 480) return 48;
+                return 60;
+            }
+
+            function generaPalloncino() {
+                if (!giocoAttivo) return;
+
+                const containerRect = container.getBoundingClientRect();
+                const size = getPalloncinoSize();
+                const maxX = containerRect.width - size - 10;
+                const x = 10 + Math.random() * maxX;
+
+                // 70% palloncino, 30% bomba
+                const isPalloncino = Math.random() < 0.7;
+
+                let emoji;
+                if (isPalloncino) {
+                    emoji = PALLONCINI[Math.floor(Math.random() * PALLONCINI.length)];
+                } else {
+                    emoji = BOMBE[Math.floor(Math.random() * BOMBE.length)];
+                }
+
+                const elemento = document.createElement('div');
+                elemento.className = 'palloncino' + (isPalloncino ? '' : ' bomba');
+                elemento.textContent = emoji;
+                elemento.style.left = x + 'px';
+                elemento.style.bottom = '-80px';
+                elemento.dataset.tipo = isPalloncino ? 'palloncino' : 'bomba';
+                elemento.dataset.attivo = 'true';
+
+                const durata = 3500 + Math.random() * 2000;
+                elemento.style.animationDuration = durata + 'ms';
+
+                // Eventi click/tap
+                elemento.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    gestisciClick(this);
+                });
+
+                elemento.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    gestisciClick(this);
+                }, { passive: false });
+
+                container.appendChild(elemento);
+
+                // Rimuovi se arriva in cima
+                setTimeout(() => {
+                    if (elemento.dataset.attivo === 'true') {
+                        elemento.dataset.attivo = 'false';
+                        if (elemento.parentNode) elemento.remove();
+                    }
+                }, durata + 200);
+            }
+
+            function gestisciClick(elemento) {
+                if (!giocoAttivo) return;
+                if (elemento.dataset.attivo === 'false') return;
+
+                elemento.dataset.attivo = 'false';
+
+                const rect = elemento.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2 - containerRect.left;
+                const cy = rect.top + rect.height / 2 - containerRect.top;
+
+                if (elemento.dataset.tipo === 'palloncino') {
+                    // PALLONCINO SCOPPIATO ✅
+                    const ora = Date.now();
+                    if (ora - ultimoScoppio < COOLDOWN_COMBO) {
+                        combo++;
+                    } else {
+                        combo = 1;
+                    }
+                    ultimoScoppio = ora;
+
+                    let puntiAggiunti = 1;
+                    if (combo >= 5 && combo % 5 === 0) {
+                        puntiAggiunti = 3;
+                        mostraMessaggio('🔥 BONUS!', '#FFD700');
+                    }
+
+                    punti += puntiAggiunti;
+                    puntiSpan.textContent = punti;
+                    comboSpan.textContent = combo;
+
+                    elemento.classList.add('scoppiato');
+
+                    const effetto = document.createElement('div');
+                    effetto.className = 'scoppio-effetto';
+                    effetto.textContent = '💥';
+                    effetto.style.left = cx + 'px';
+                    effetto.style.top = cy + 'px';
+                    container.appendChild(effetto);
+                    setTimeout(() => effetto.remove(), 700);
+
+                    const volante = document.createElement('div');
+                    volante.className = 'punteggio-volante';
+                    volante.textContent = '+' + puntiAggiunti;
+                    volante.style.left = cx + 'px';
+                    volante.style.top = cy + 'px';
+                    container.appendChild(volante);
+                    setTimeout(() => volante.remove(), 800);
+
+                    setTimeout(() => {
+                        if (elemento.parentNode) elemento.remove();
+                    }, 300);
+
+                } else {
+                    // BOMBA SCOPPIATA ❌
+                    combo = 0;
+                    comboSpan.textContent = '0';
+
+                    punti = Math.max(0, punti - 2);
+                    puntiSpan.textContent = punti;
+
+                    elemento.classList.add('scoppiato');
+
+                    const effetto = document.createElement('div');
+                    effetto.className = 'scoppio-effetto';
+                    effetto.textContent = '💣';
+                    effetto.style.left = cx + 'px';
+                    effetto.style.top = cy + 'px';
+                    container.appendChild(effetto);
+                    setTimeout(() => effetto.remove(), 700);
+
+                    const volante = document.createElement('div');
+                    volante.className = 'punteggio-volante negativo';
+                    volante.textContent = '-2 💣';
+                    volante.style.left = cx + 'px';
+                    volante.style.top = cy + 'px';
+                    container.appendChild(volante);
+                    setTimeout(() => volante.remove(), 800);
+
+                    mostraMessaggio('💣 -2', '#ff4444');
+
+                    setTimeout(() => {
+                        if (elemento.parentNode) elemento.remove();
+                    }, 300);
+                }
+            }
+
+            function mostraMessaggio(testo, colore = '#FFD700') {
+                const msg = document.createElement('div');
+                msg.style.position = 'absolute';
+                msg.style.left = '50%';
+                msg.style.top = '25%';
+                msg.style.transform = 'translateX(-50%)';
+                msg.style.color = colore;
+                msg.style.fontSize = '2em';
+                msg.style.fontWeight = 'bold';
+                msg.style.textShadow = '0 0 30px ' + colore + '66';
+                msg.style.pointerEvents = 'none';
+                msg.style.zIndex = '15';
+                msg.style.animation = 'scoppioAnim 0.8s ease forwards';
+                msg.textContent = testo;
+                container.appendChild(msg);
+                setTimeout(() => msg.remove(), 800);
+            }
+
+            function avviaGioco() {
+                giocoAttivo = true;
+                punti = 0;
+                tempo = 30;
+                tempoMax = 30;
+                combo = 0;
+                ultimoScoppio = 0;
+
+                puntiSpan.textContent = '0';
+                timerSpan.textContent = '30';
+                comboSpan.textContent = '0';
+                timerBar.style.width = '100%';
+                gameOverDiv.style.display = 'none';
+
+                // Rimuovi tutti gli elementi
+                document.querySelectorAll('.palloncino').forEach(el => el.remove());
+                document.querySelectorAll('.scoppio-effetto, .punteggio-volante').forEach(el => el.remove());
+
+                if (timerInterval) clearInterval(timerInterval);
+                if (spawnInterval) clearInterval(spawnInterval);
+                if (difficoltaInterval) clearInterval(difficoltaInterval);
+
+                timerInterval = setInterval(() => {
+                    tempo--;
+                    timerSpan.textContent = tempo;
+                    timerBar.style.width = (tempo / tempoMax * 100) + '%';
+
+                    if (tempo <= 0) {
+                        clearInterval(timerInterval);
+                        clearInterval(spawnInterval);
+                        clearInterval(difficoltaInterval);
+                        giocoAttivo = false;
+                        gameOverDiv.style.display = 'block';
+                        puntiFinali.textContent = punti;
+                    }
+                }, 1000);
+
+                let frequenzaSpawn = 700;
+                spawnInterval = setInterval(() => {
+                    if (giocoAttivo) generaPalloncino();
+                }, frequenzaSpawn);
+
+                let incrementi = 0;
+                difficoltaInterval = setInterval(() => {
+                    if (!giocoAttivo) { clearInterval(difficoltaInterval); return; }
+                    incrementi++;
+                    if (incrementi >= 8) { clearInterval(difficoltaInterval); return; }
+
+                    if (incrementi % 2 === 0) {
+                        clearInterval(spawnInterval);
+                        const nuovaFrequenza = Math.max(350, frequenzaSpawn - 50);
+                        frequenzaSpawn = nuovaFrequenza;
+                        spawnInterval = setInterval(() => {
+                            if (giocoAttivo) generaPalloncino();
+                        }, frequenzaSpawn);
+                    }
+                }, 4000);
+
+                // Genera palloncini iniziali
+                setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 200);
+                setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 500);
+                setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 800);
+                setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 1100);
+                setTimeout(() => { if (giocoAttivo) generaPalloncino(); }, 1400);
+            }
+
+            function ricomincia() {
+                avviaGioco();
+            }
+
+            window.addEventListener('resize', () => {});
+
+            avviaGioco();
+        })();
+    </script>
+</body>
+</html>

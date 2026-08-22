@@ -1,0 +1,714 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🎄 Raccolta Regali</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0a0e2a, #1a1a3e);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            padding: 10px;
+            touch-action: none;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 1.3em;
+            margin-bottom: 4px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .info {
+            color: #aab;
+            font-size: 0.95em;
+            display: flex;
+            gap: 30px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+        }
+
+            .info span {
+                font-weight: bold;
+                color: #fff;
+                min-width: 20px;
+            }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 70vh;
+            min-height: 450px;
+            background: radial-gradient(ellipse at 50% 100%, #1a2a4a, #0a0e1a);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.15);
+            overflow: hidden;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.7);
+            touch-action: none;
+            cursor: default;
+        }
+
+        .neve {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 1.5em;
+            pointer-events: none;
+            animation: neveCaduta linear infinite;
+        }
+
+        @keyframes neveCaduta {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(calc(70vh + 30px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        #cestino {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 70px;
+            font-size: 3.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 100%, #8B4513, #5D2E0C);
+            border-radius: 10px 10px 20px 20px;
+            box-shadow: 0 8px 30px rgba(139, 69, 19, 0.5);
+            z-index: 5;
+            touch-action: none;
+            pointer-events: none;
+            transition: left 0.12s ease;
+            will-change: left;
+        }
+
+            #cestino::after {
+                content: '';
+                position: absolute;
+                top: -8px;
+                left: -5px;
+                right: -5px;
+                height: 12px;
+                background: #A0522D;
+                border-radius: 5px 5px 0 0;
+                border: 2px solid #6B3410;
+            }
+
+        .oggetto {
+            position: absolute;
+            font-size: 2.2em;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            animation: caduta lineare forwards;
+            /* L'animazione parte SUBITO */
+            top: -60px;
+        }
+
+        @keyframes caduta {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(0.8);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(calc(70vh + 80px)) rotate(720deg);
+                opacity: 0.7;
+            }
+        }
+
+        .oggetto.regalo {
+            animation: cadutaRegalo linear forwards;
+        }
+
+        @keyframes cadutaRegalo {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(0.8);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(50%) rotate(180deg) scale(1.1);
+            }
+
+            100% {
+                transform: translateY(calc(70vh + 80px)) rotate(360deg) scale(0.9);
+                opacity: 0.7;
+            }
+        }
+
+        .oggetto.trappola {
+            animation: cadutaTrappola linear forwards;
+        }
+
+        @keyframes cadutaTrappola {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(0.8);
+            }
+
+            30% {
+                transform: translateY(30%) rotate(-30deg) scale(1.2);
+            }
+
+            70% {
+                transform: translateY(60%) rotate(30deg) scale(1.1);
+            }
+
+            100% {
+                transform: translateY(calc(70vh + 80px)) rotate(0deg) scale(0.9);
+            }
+        }
+
+        .raccolto {
+            position: absolute;
+            font-size: 1.5em;
+            pointer-events: none;
+            z-index: 10;
+            animation: raccoltoAnim 0.6s ease forwards;
+        }
+
+        @keyframes raccoltoAnim {
+            0% {
+                transform: scale(0.5) translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5) translateY(-60px);
+                opacity: 0;
+            }
+        }
+
+        .trappola-colpita {
+            position: absolute;
+            font-size: 1.8em;
+            pointer-events: none;
+            z-index: 10;
+            animation: trappolaAnim 0.7s ease forwards;
+        }
+
+        @keyframes trappolaAnim {
+            0% {
+                transform: scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5) rotate(180deg);
+            }
+
+            100% {
+                transform: scale(0) rotate(360deg) translateY(-80px);
+                opacity: 0;
+            }
+        }
+
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ffd700;
+            font-size: 1.6em;
+            display: none;
+            background: rgba(10, 14, 26, 0.92);
+            padding: 30px 20px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 320px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 20;
+        }
+
+            #game-over .punti-finali {
+                font-size: 3em;
+                color: #4ecdc4;
+                font-weight: bold;
+                text-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+            }
+
+        .btn-rigioca {
+            margin-top: 15px;
+            padding: 12px 36px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(255, 210, 0, 0.25);
+        }
+
+            .btn-rigioca:hover {
+                transform: scale(1.05);
+            }
+
+            .btn-rigioca:active {
+                transform: scale(0.95);
+            }
+
+        #game-over .sottotitolo {
+            font-size: 0.5em;
+            color: #667;
+            margin-top: 10px;
+        }
+
+        .vite-container {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.4em;
+            z-index: 6;
+            color: #ff4444;
+            text-shadow: 0 0 20px rgba(255,68,68,0.3);
+            letter-spacing: 2px;
+        }
+
+        .legenda {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.25);
+            z-index: 1;
+            text-align: center;
+            pointer-events: none;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        @media (max-width: 480px) {
+            #cestino {
+                width: 65px;
+                height: 60px;
+                font-size: 2.6em;
+                bottom: 12px;
+            }
+
+            .oggetto {
+                font-size: 1.8em;
+                width: 42px;
+                height: 42px;
+            }
+
+            h1 {
+                font-size: 1.1em;
+            }
+
+            .info {
+                font-size: 0.85em;
+                gap: 20px;
+            }
+
+            #game-over {
+                font-size: 1.3em;
+                padding: 20px;
+            }
+
+            .vite-container {
+                font-size: 1.1em;
+            }
+
+            .legenda {
+                font-size: 0.55em;
+                bottom: 72px;
+                padding: 3px 10px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            #cestino {
+                width: 55px;
+                height: 50px;
+                font-size: 2.2em;
+                bottom: 10px;
+            }
+
+            .oggetto {
+                font-size: 1.5em;
+                width: 36px;
+                height: 36px;
+            }
+
+            .legenda {
+                font-size: 0.5em;
+                bottom: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎄 Raccolta Regali</h1>
+    <div class="info">
+        <div>🎁 <span id="punti">0</span></div>
+        <div>⏱️ <span id="timer">30</span>s</div>
+        <div>🔥 <span id="combo">0</span>x</div>
+    </div>
+    <div id="game-container">
+        <!-- Neve decorativa -->
+        <div class="neve" style="left:5%;animation-duration:8s;animation-delay:0s;">❄</div>
+        <div class="neve" style="left:15%;animation-duration:10s;animation-delay:1s;">❄</div>
+        <div class="neve" style="left:30%;animation-duration:7s;animation-delay:0.5s;">❄</div>
+        <div class="neve" style="left:50%;animation-duration:9s;animation-delay:2s;">❄</div>
+        <div class="neve" style="left:65%;animation-duration:11s;animation-delay:0.3s;">❄</div>
+        <div class="neve" style="left:80%;animation-duration:8s;animation-delay:1.5s;">❄</div>
+        <div class="neve" style="left:92%;animation-duration:10s;animation-delay:0.8s;">❄</div>
+
+        <div id="cestino">🎄</div>
+        <div class="vite-container" id="viteDisplay">❤️❤️❤️</div>
+        <div class="legenda">🎁 SOLO i pacchetti regalo danno punti | ❌ EVITA tutto il resto</div>
+        <div id="game-over">
+            <div>⏰ Tempo scaduto!</div>
+            <div class="punti-finali" id="puntiFinali">0</div>
+            <div style="font-size:0.6em; color:#aab;">regali raccolti</div>
+            <button class="btn-rigioca" onclick="ricomincia()">🔄 Rigioca</button>
+            <div class="sottotitolo">Raccogli solo i pacchetti regalo 🎁</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const container = document.getElementById('game-container');
+            const cestino = document.getElementById('cestino');
+            const puntiSpan = document.getElementById('punti');
+            const timerSpan = document.getElementById('timer');
+            const comboSpan = document.getElementById('combo');
+            const viteDisplay = document.getElementById('viteDisplay');
+            const gameOverDiv = document.getElementById('game-over');
+            const puntiFinali = document.getElementById('puntiFinali');
+
+            let punti = 0;
+            let tempo = 30;
+            let vite = 3;
+            let giocoAttivo = true;
+            let combo = 0;
+            let ultimoRaccolto = 0;
+            const COOLDOWN_COMBO = 1000;
+
+            let timerInterval = null;
+            let spawnInterval = null;
+            let difficoltaInterval = null;
+
+            let cestinoX = 50;
+
+            // SOLO 🎁 è il regalo da raccogliere
+            const REGALO = '🎁';
+
+            // TUTTO IL RESTO SONO TRAPPOLE (da evitare)
+            const TRAPPOLE = [
+                '🎄', '🎅', '🦌', '⛄', '🌟', '✨', '🔔', '🕯️', '🧦', '🎀', '🧸',
+                '💩', '🧟', '👻', '🤡', '🧨', '🪰', '🐛', '🧊', '💀', '☠️',
+                '🕷️', '🦂', '🐍', '🦇', '👾', '🤖', '👹', '👺', '💣', '🔫',
+                '🗡️', '⚔️', '🪓', '🧹', '🪣', '🧫', '🧪', '☣️', '⚠️', '🚫',
+                '❄️', '☃️', '🕊️', '🦉', '🐧', '🦋'
+            ];
+
+            function getCestinoWidth() {
+                const w = window.innerWidth;
+                if (w <= 380) return 55;
+                if (w <= 480) return 65;
+                return 80;
+            }
+
+            function getOggettoSize() {
+                const w = window.innerWidth;
+                if (w <= 380) return 36;
+                if (w <= 480) return 42;
+                return 50;
+            }
+
+            function spostaCestino(clientX) {
+                const rect = container.getBoundingClientRect();
+                const containerWidth = rect.width;
+                const cestinoWidth = getCestinoWidth();
+                const padding = 5;
+
+                let x = (clientX - rect.left) - cestinoWidth / 2;
+                x = Math.max(padding, Math.min(containerWidth - cestinoWidth - padding, x));
+
+                cestinoX = (x / containerWidth) * 100;
+                cestino.style.left = cestinoX + '%';
+                cestino.style.transform = 'translateX(-' + cestinoX + '%)';
+            }
+
+            container.addEventListener('mousemove', (e) => {
+                if (!giocoAttivo) return;
+                if (e.target === container || e.target === cestino || e.target.parentNode === container) {
+                    spostaCestino(e.clientX);
+                }
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!giocoAttivo) return;
+                const touch = e.touches[0];
+                spostaCestino(touch.clientX);
+            }, { passive: false });
+
+            container.addEventListener('touchstart', (e) => {
+                if (!giocoAttivo) return;
+                const touch = e.touches[0];
+                spostaCestino(touch.clientX);
+            }, { passive: true });
+
+            function generaOggetto() {
+                if (!giocoAttivo) return;
+
+                const containerRect = container.getBoundingClientRect();
+                const size = getOggettoSize();
+                const maxX = containerRect.width - size - 10;
+                const x = 10 + Math.random() * maxX;
+
+                // 45% di probabilità che sia un regalo (🎁), 55% trappola
+                const isRegalo = Math.random() < 0.45;
+
+                let emoji;
+                if (isRegalo) {
+                    emoji = REGALO;
+                } else {
+                    emoji = TRAPPOLE[Math.floor(Math.random() * TRAPPOLE.length)];
+                }
+
+                const oggetto = document.createElement('div');
+                oggetto.className = 'oggetto ' + (isRegalo ? 'regalo' : 'trappola');
+                oggetto.textContent = emoji;
+                oggetto.style.left = x + 'px';
+                oggetto.style.top = '-60px'; // Parte SUBITO dall'alto
+                oggetto.dataset.tipo = isRegalo ? 'regalo' : 'trappola';
+                oggetto.dataset.attivo = 'true';
+
+                // Durata della caduta
+                const durata = 2500 + Math.random() * 1500;
+                oggetto.style.animationDuration = durata + 'ms';
+
+                container.appendChild(oggetto);
+
+                const checkInterval = setInterval(() => {
+                    if (!giocoAttivo || oggetto.dataset.attivo === 'false') {
+                        clearInterval(checkInterval);
+                        return;
+                    }
+
+                    const oggettoRect = oggetto.getBoundingClientRect();
+                    const cestinoRect = cestino.getBoundingClientRect();
+
+                    const cx1 = oggettoRect.left + oggettoRect.width / 2;
+                    const cy1 = oggettoRect.top + oggettoRect.height / 2;
+                    const cx2 = cestinoRect.left + cestinoRect.width / 2;
+                    const cy2 = cestinoRect.top + cestinoRect.height / 2;
+
+                    const dist = Math.sqrt((cx1 - cx2) ** 2 + (cy1 - cy2) ** 2);
+                    const threshold = (oggettoRect.width + cestinoRect.width) / 2.5;
+
+                    if (dist < threshold) {
+                        clearInterval(checkInterval);
+                        oggetto.dataset.attivo = 'false';
+
+                        if (isRegalo) {
+                            // REGALO RACCOLTO ✅
+                            const ora = Date.now();
+                            if (ora - ultimoRaccolto < COOLDOWN_COMBO) {
+                                combo++;
+                            } else {
+                                combo = 1;
+                            }
+                            ultimoRaccolto = ora;
+
+                            let puntiAggiunti = 1;
+                            if (combo >= 5 && combo % 5 === 0) {
+                                puntiAggiunti = 3;
+                                mostraMessaggio('🔥 BONUS!', '#ffd700');
+                            }
+
+                            punti += puntiAggiunti;
+                            puntiSpan.textContent = punti;
+                            comboSpan.textContent = combo;
+
+                            const effetto = document.createElement('div');
+                            effetto.className = 'raccolto';
+                            effetto.textContent = '✨';
+                            effetto.style.left = (oggettoRect.left - containerRect.left) + 'px';
+                            effetto.style.top = (oggettoRect.top - containerRect.top) + 'px';
+                            container.appendChild(effetto);
+                            setTimeout(() => effetto.remove(), 700);
+
+                            oggetto.remove();
+                        } else {
+                            // TRAPPOLA RACCOLTA ❌
+                            vite--;
+                            aggiornaVite();
+
+                            const effetto = document.createElement('div');
+                            effetto.className = 'trappola-colpita';
+                            effetto.textContent = '💥';
+                            effetto.style.left = (oggettoRect.left - containerRect.left) + 'px';
+                            effetto.style.top = (oggettoRect.top - containerRect.top) + 'px';
+                            container.appendChild(effetto);
+                            setTimeout(() => effetto.remove(), 700);
+
+                            mostraMessaggio('💔 -1 ❤️', '#ff4444');
+                            oggetto.remove();
+
+                            if (vite <= 0) {
+                                clearInterval(timerInterval);
+                                clearInterval(spawnInterval);
+                                clearInterval(difficoltaInterval);
+                                giocoAttivo = false;
+                                gameOverDiv.style.display = 'block';
+                                puntiFinali.textContent = punti;
+                            }
+                        }
+                    }
+                }, 50);
+
+                // Rimuovi oggetto se arriva in fondo
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    if (oggetto.dataset.attivo === 'true') {
+                        oggetto.dataset.attivo = 'false';
+                        oggetto.remove();
+                    }
+                }, durata + 200);
+            }
+
+            function mostraMessaggio(testo, colore = '#ffd700') {
+                const msg = document.createElement('div');
+                msg.style.position = 'absolute';
+                msg.style.left = '50%';
+                msg.style.top = '25%';
+                msg.style.transform = 'translateX(-50%)';
+                msg.style.color = colore;
+                msg.style.fontSize = '2em';
+                msg.style.fontWeight = 'bold';
+                msg.style.textShadow = '0 0 30px ' + colore + '66';
+                msg.style.pointerEvents = 'none';
+                msg.style.zIndex = '15';
+                msg.style.animation = 'raccoltoAnim 0.8s ease forwards';
+                msg.textContent = testo;
+                container.appendChild(msg);
+                setTimeout(() => msg.remove(), 800);
+            }
+
+            function aggiornaVite() {
+                viteDisplay.textContent = '❤️'.repeat(Math.max(0, vite)) + '🖤'.repeat(Math.max(0, 3 - vite));
+            }
+
+            function avviaGioco() {
+                giocoAttivo = true;
+                punti = 0;
+                tempo = 30;
+                vite = 3;
+                combo = 0;
+                ultimoRaccolto = 0;
+
+                puntiSpan.textContent = '0';
+                timerSpan.textContent = '30';
+                comboSpan.textContent = '0';
+                aggiornaVite();
+                gameOverDiv.style.display = 'none';
+
+                document.querySelectorAll('.oggetto').forEach(el => el.remove());
+                document.querySelectorAll('.raccolto, .trappola-colpita').forEach(el => el.remove());
+
+                if (timerInterval) clearInterval(timerInterval);
+                if (spawnInterval) clearInterval(spawnInterval);
+                if (difficoltaInterval) clearInterval(difficoltaInterval);
+
+                timerInterval = setInterval(() => {
+                    tempo--;
+                    timerSpan.textContent = tempo;
+                    if (tempo <= 0) {
+                        clearInterval(timerInterval);
+                        clearInterval(spawnInterval);
+                        clearInterval(difficoltaInterval);
+                        giocoAttivo = false;
+                        gameOverDiv.style.display = 'block';
+                        puntiFinali.textContent = punti;
+                    }
+                }, 1000);
+
+                let frequenzaSpawn = 800;
+                spawnInterval = setInterval(() => {
+                    if (giocoAttivo) generaOggetto();
+                }, frequenzaSpawn);
+
+                let incrementi = 0;
+                difficoltaInterval = setInterval(() => {
+                    if (!giocoAttivo) { clearInterval(difficoltaInterval); return; }
+                    incrementi++;
+                    if (incrementi >= 8) { clearInterval(difficoltaInterval); return; }
+
+                    if (incrementi % 2 === 0) {
+                        clearInterval(spawnInterval);
+                        const nuovaFrequenza = Math.max(380, frequenzaSpawn - 55);
+                        frequenzaSpawn = nuovaFrequenza;
+                        spawnInterval = setInterval(() => {
+                            if (giocoAttivo) generaOggetto();
+                        }, frequenzaSpawn);
+                    }
+                }, 4000);
+
+                // Genera oggetti subito all'inizio
+                setTimeout(() => { if (giocoAttivo) generaOggetto(); }, 100);
+                setTimeout(() => { if (giocoAttivo) generaOggetto(); }, 400);
+                setTimeout(() => { if (giocoAttivo) generaOggetto(); }, 700);
+                setTimeout(() => { if (giocoAttivo) generaOggetto(); }, 1000);
+            }
+
+            function ricomincia() {
+                avviaGioco();
+            }
+
+            window.addEventListener('resize', () => {});
+
+            avviaGioco();
+        })();
+    </script>
+</body>
+</html>

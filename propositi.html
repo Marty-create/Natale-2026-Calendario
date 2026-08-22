@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I tuoi propositi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e1a;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(145deg, #1a1f35, #0d1225);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffd200;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .propositi {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .proposito {
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #2a3050;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: #ccd;
+            font-size: 1em;
+        }
+
+            .proposito:hover {
+                border-color: #f7971e;
+                background: rgba(247,151,30,0.1);
+            }
+
+            .proposito.selezionato {
+                border-color: #4ecdc4;
+                background: rgba(78,205,196,0.15);
+                color: #4ecdc4;
+            }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+            .btn:hover {
+                transform: scale(1.02);
+            }
+
+        .risultato {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(78,205,196,0.1);
+            border: 1px solid #4ecdc4;
+            display: none;
+        }
+
+            .risultato.visibile {
+                display: block;
+            }
+
+            .risultato h2 {
+                color: #ffd200;
+            }
+
+            .risultato p {
+                color: #aab;
+                margin: 10px 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <h1>🎯 I tuoi propositi per il 2025</h1>
+        <p style="color:#aab; font-size:0.9em;">Scegli 3 propositi per il nuovo anno!</p>
+        <div class="propositi" id="listaPropositi">
+            <button class="proposito" data-id="1">💪 Fare più sport</button>
+            <button class="proposito" data-id="2">📚 Leggere di più</button>
+            <button class="proposito" data-id="3">🌍 Viaggiare di più</button>
+            <button class="proposito" data-id="4">💰 Risparmiare soldi</button>
+            <button class="proposito" data-id="5">🧘 Meditare e rilassarsi</button>
+            <button class="proposito" data-id="6">🍎 Mangiare sano</button>
+            <button class="proposito" data-id="7">🎸 Imparare uno strumento</button>
+            <button class="proposito" data-id="8">📱 Passare meno tempo al telefono</button>
+        </div>
+        <button class="btn" id="btnConferma">Conferma i tuoi propositi 🎯</button>
+        <div class="risultato" id="risultato">
+            <h2>🎉 Propositi scelti!</h2>
+            <p id="testoRisultato"></p>
+            <p style="color:#ffd200; font-size:1.1em;">Buon 2025, {nome}! 🎄</p>
+        </div>
+    </div>
+
+    <script>
+        const propositi = {
+            1: "💪 Fare più sport",
+            2: "📚 Leggere di più",
+            3: "🌍 Viaggiare di più",
+            4: "💰 Risparmiare soldi",
+            5: "🧘 Meditare e rilassarsi",
+            6: "🍎 Mangiare sano",
+            7: "🎸 Imparare uno strumento",
+            8: "📱 Passare meno tempo al telefono"
+        };
+
+        let selezionati = [];
+
+        document.querySelectorAll('.proposito').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.dataset.id);
+                if (selezionati.includes(id)) {
+                    selezionati = selezionati.filter(i => i !== id);
+                    btn.classList.remove('selezionato');
+                } else if (selezionati.length < 3) {
+                    selezionati.push(id);
+                    btn.classList.add('selezionato');
+                } else {
+                    alert('Hai già scelto 3 propositi! 🎯');
+                }
+            });
+        });
+
+        document.getElementById('btnConferma').addEventListener('click', () => {
+            if (selezionati.length < 3) {
+                alert('Scegli esattamente 3 propositi! 🎯');
+                return;
+            }
+            const nomi = selezionati.map(id => propositi[id]);
+            document.getElementById('testoRisultato').textContent = '📝 Hai scelto: ' + nomi.join(', ');
+            document.getElementById('risultato').classList.add('visibile');
+            document.getElementById('btnConferma').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

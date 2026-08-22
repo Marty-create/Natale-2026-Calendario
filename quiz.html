@@ -1,0 +1,274 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz di Natale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0a0e1a;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(145deg, #1a1f35, #0d1225);
+            padding: 25px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        h1 {
+            color: #ffd200;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .progresso {
+            color: #667;
+            font-size: 0.85em;
+            text-align: center;
+            margin: 5px 0 15px 0;
+        }
+
+        .domanda {
+            color: #fff;
+            font-size: 1.15em;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .opzioni {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opzione {
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid #2a3050;
+            background: transparent;
+            color: #ccd;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: left;
+        }
+
+            .opzione:hover:not(.disabilitata) {
+                border-color: #f7971e;
+                background: rgba(247,151,30,0.08);
+            }
+
+            .opzione.corretta {
+                border-color: #4ecdc4;
+                background: rgba(78,205,196,0.15);
+                color: #4ecdc4;
+            }
+
+            .opzione.sbagliata {
+                border-color: #ff6b6b;
+                background: rgba(255,107,107,0.15);
+                color: #ff6b6b;
+            }
+
+            .opzione.disabilitata {
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+        .punteggio {
+            color: #4ecdc4;
+            font-size: 1em;
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .btn {
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1f35;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+            .btn:hover {
+                transform: scale(1.02);
+            }
+
+        .risultato {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+            .risultato h2 {
+                color: #ffd200;
+                font-size: 2.5em;
+            }
+
+            .risultato .punti {
+                color: #4ecdc4;
+                font-size: 1.2em;
+            }
+
+            .risultato .messaggio {
+                color: #aab;
+                font-size: 1em;
+                margin: 10px 0;
+            }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .domanda {
+                font-size: 1em;
+            }
+
+            .opzione {
+                padding: 12px 14px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <h1>📝 Quiz di Natale</h1>
+        <div class="progresso" id="progresso">Domanda 1 di 5</div>
+        <div id="contenuto"></div>
+    </div>
+
+    <script>
+        const domande = [
+            {
+                domanda: "In quale mese si celebra il Natale?",
+                opzioni: ["Novembre", "Dicembre", "Gennaio", "Ottobre"],
+                corretta: 1
+            },
+            {
+                domanda: "Chi porta i regali ai bambini in Italia la notte del 24?",
+                opzioni: ["Babbo Natale", "La Befana", "Gesù Bambino", "Gli elfi"],
+                corretta: 0
+            },
+            {
+                domanda: "Quanti giorni dura l'Avvento?",
+                opzioni: ["7", "14", "21", "24"],
+                corretta: 3
+            },
+            {
+                domanda: "Quale di questi è un simbolo del Natale?",
+                opzioni: ["Il coniglio", "La zucca", "La stella cometa", "Il tricheco"],
+                corretta: 2
+            },
+            {
+                domanda: "Cosa si mette tradizionalmente in cima all'albero?",
+                opzioni: ["Una stella", "Un angelo", "Una palla", "Una candela"],
+                corretta: 0
+            }
+        ];
+
+        let indice = 0;
+        let punteggio = 0;
+        let risposto = false;
+
+        function mostraDomanda() {
+            if (indice >= domande.length) {
+                mostraRisultato();
+                return;
+            }
+
+            risposto = false;
+            const d = domande[indice];
+            document.getElementById('progresso').textContent = `Domanda ${indice + 1} di ${domande.length}`;
+
+            let html = `<div class="domanda">❓ ${d.domanda}</div>`;
+            html += `<div class="opzioni">`;
+
+            d.opzioni.forEach((opzione, i) => {
+                html += `<button class="opzione" data-index="${i}">${opzione}</button>`;
+            });
+
+            html += `</div>`;
+            html += `<div class="punteggio">⭐ Punti: ${punteggio}</div>`;
+
+            document.getElementById('contenuto').innerHTML = html;
+
+            document.querySelectorAll('.opzione').forEach(btn => {
+                btn.addEventListener('click', () => rispondi(parseInt(btn.dataset.index)));
+            });
+        }
+
+        function rispondi(index) {
+            if (risposto) return;
+            risposto = true;
+
+            const d = domande[indice];
+            const bottoni = document.querySelectorAll('.opzione');
+
+            bottoni.forEach((btn, i) => {
+                btn.classList.add('disabilitata');
+                if (i === d.corretta) btn.classList.add('corretta');
+                if (i === index && i !== d.corretta) btn.classList.add('sbagliata');
+            });
+
+            if (index === d.corretta) {
+                punteggio++;
+                document.querySelector('.punteggio').textContent = `⭐ Punti: ${punteggio}`;
+            }
+
+            setTimeout(() => {
+                indice++;
+                mostraDomanda();
+            }, 1300);
+        }
+
+        function mostraRisultato() {
+            let messaggio = '';
+            if (punteggio === 5) messaggio = '🎉 Perfetto! Sei un vero esperto di Natale! 🎅';
+            else if (punteggio >= 3) messaggio = '👏 Buon punteggio! Conosci bene il Natale! 🎄';
+            else messaggio = '📖 Ripassa un po\'! Il Natale è bello da conoscere! ❄️';
+
+            document.getElementById('progresso').textContent = '🎄 Completato!';
+            document.getElementById('contenuto').innerHTML = `
+                <div class="risultato">
+                    <h2>${punteggio} / ${domande.length}</h2>
+                    <div class="punti">⭐ ${punteggio} punti</div>
+                    <div class="messaggio">${messaggio}</div>
+                    <button class="btn" onclick="ricomincia()">🔄 Rigioca</button>
+                </div>
+            `;
+        }
+
+        function ricomincia() {
+            indice = 0;
+            punteggio = 0;
+            mostraDomanda();
+        }
+
+        mostraDomanda();
+    </script>
+</body>
+</html>
