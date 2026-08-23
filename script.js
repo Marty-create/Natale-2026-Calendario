@@ -37,7 +37,7 @@ const MAPPA_FOTO_AMICI = {
         'foto1': 'https://i.imgur.com/LPe9gKO.jpeg',
         'foto2': 'https://i.imgur.com/TclNj0r.jpeg',
         'foto3': 'https://i.imgur.com/6TZuPii.jpeg',
-        'foto4': ''
+        'foto4': 'https://i.imgur.com/tNsE6LP.jpeg'
     },
     'cuggi': {
         'foto1': 'https://i.imgur.com/Ha1Eyyi.jpeg',
