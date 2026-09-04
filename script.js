@@ -75,6 +75,12 @@ const MAPPA_FOTO_AMICI = {
         'foto3': 'https://i.imgur.com/w3qUBq9.jpeg',
         'foto4': 'https://i.imgur.com/SsVMecY.jpeg'
     }
+    'marty': {
+        'foto1': 'https://i.imgur.com/TPXqgfx.jpeg',
+        'foto2': 'https://i.imgur.com/cQe0hkl.jpeg',
+        'foto3': 'https://i.imgur.com/D31nb5S.jpeg',
+        'foto4': 'https://i.imgur.com/Cg4VAnD.jpeg'
+    }
 };
 
 // ============================================================
