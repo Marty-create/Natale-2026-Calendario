@@ -180,16 +180,16 @@ function getLinkFoto(nome, tipo) {
 
 function giornoCorrente() {
     // 🔧 FORZATO PER TEST: Oggi è il 24 dicembre
-    return 24;
-
-    // CODICE ORIGINALE (commentato)
-    // const oggi = new Date();
-    // const mese = oggi.getMonth();
-    // const giorno = oggi.getDate();
-    // if (mese !== 11 || giorno > 24 || giorno < 1) {
-    //     return null;
-    // }
-    // return giorno;
+   // return 24;
+    
+    // CODICE ORIGINALE Per avvento
+    const oggi = new Date();
+    const mese = oggi.getMonth();
+    const giorno = oggi.getDate();
+    if (mese !== 11 || giorno > 24 || giorno < 1) {
+      return null;
+ }
+    return giorno;
 }
 
 function isGiornoSbloccato(giorno) {
